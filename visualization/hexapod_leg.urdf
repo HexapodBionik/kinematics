@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot name="hexapod_leg">
+  <material name="Blue">
+    <color rgba="0.2 0.2 1.0 1.0"/>
+  </material>
+  <material name="Orange">
+    <color rgba="1.0 0.5 0.0 1.0"/>
+  </material>
+  <material name="Black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <link name="linkmount"/>
+  <link name="link1">
+    <visual>
+      <origin xyz="0 0 0.15"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.3"/>
+      </geometry>
+      <material name="Black"/>
+    </visual>
+  </link>
+  <link name="link2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+      <material name="Orange"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0.1 0" rpy="1.5707 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.2"/>
+      </geometry>
+      <material name="Blue"/>
+    </visual>
+  </link>
+  <link name="link3">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+      <material name="Orange"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0.2 0" rpy="1.5707 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.4"/>
+      </geometry>
+      <material name="Blue"/>
+    </visual>
+  </link>
+  <link name="link4">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5707 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.1"/>
+      </geometry>
+      <material name="Orange"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0.4 0" rpy="1.5707 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.8"/>
+      </geometry>
+      <material name="Blue"/>
+    </visual>
+  </link>
+
+<joint name="joint1" type="revolute">
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <parent link="linkmount"/>
+  <child link="link1"/>
+  <axis xyz="0 0 1.0"/>
+  <limit lower="-1.5707" upper="1.5707"/>
+</joint>
+<joint name="joint2" type="revolute">
+  <origin xyz="0 0 0.305" rpy="0 0 0"/>
+  <parent link="link1"/>
+  <child link="link2"/>
+  <axis xyz="0 0 1.0"/>
+  <limit lower="-1.5707" upper="1.5707"/>
+</joint>
+<joint name="joint3" type="revolute">
+  <origin xyz="0 0.2 0" rpy="0 1.5707 0"/>
+  <parent link="link2"/>
+  <child link="link3"/>
+  <axis xyz="0 0 1.0"/>
+  <limit lower="-1.5707" upper="1.5707"/>
+</joint>
+<joint name="joint4" type="revolute">
+  <origin xyz="0 0.4 0" rpy="1.5707 1.5707 0"/>
+  <parent link="link3"/>
+  <child link="link4"/>
+  <axis xyz="1.0 0 0"/>
+  <limit lower="-1.5707" upper="1.5707"/>
+</joint>
+</robot>
