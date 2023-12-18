@@ -169,4 +169,4 @@ class RoboticArm:
         q3 += np.arccos((l2**2 + l3**2 - x**2 - z**2) /
                          (2*l2*l3)) - math.pi
 
-        return (q1, q2, q3)
+        return q1, q2, q3
