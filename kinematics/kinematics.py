@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from typing import Tuple
 
 
 def trans(v):
@@ -74,21 +75,21 @@ def se3_norm(v):
             np.array([v[0], v[1], v[2]]))
 
 
-class RoboticArm:
+class KinematicsSolver:
     """
     Class storing parameters of the
-    robotic arm. The arm consists of
-    three connected sticks with
-    servos between them.
+    robotic leg of Hexapod Robot.
+    The leg has 3 degrees of freedom.
     """
 
-    def __init__(self, t1, t2, t3, ma2, ma3):
+    def __init__(self, t1: np.ndarray, t2: np.ndarray, t3: np.ndarray,
+                 ma2: float, ma3: float):
         """
-        @param t1: Translation 1
-        @param t2: Translation 2
-        @param t3: Translation 3
-        @param ma2: Servo mount angle 2
-        @param ma3: Servo mount angle 3
+        @param t1: Translation 1 (between J1 and J2)
+        @param t2: Translation 2 (between J2 and J3)
+        @param t3: Translation 3 (between J3 and FCP)
+        @param ma2: Servo mount angle 2 (in radians)
+        @param ma3: Servo mount angle 3 (in radians)
         """
 
         assert t1.ndim == 1
@@ -98,7 +99,6 @@ class RoboticArm:
         assert len(t2) == 4
         assert len(t3) == 4
 
-        assert t1[2] == 0
         assert t1[3] == 1
         assert t2[1] == 0
         assert t2[3] == 1
@@ -111,12 +111,14 @@ class RoboticArm:
         self.ma2 = ma2
         self.ma3 = ma3
 
-    def forward(self, q1, q2, q3):
+    def forward(self, q1: float, q2: float, q3: float) -> np.ndarray:
         """
         Forward Kinematics
 
-        @param v: Angles on servos
-        @return: Position of arm's end
+        @param q1: Joint1 angle (in radians)
+        @param q2: Joint2 angle (in radians)
+        @param q3: Joint3 angle (in radians)
+        @return: Position of leg's foot center point
         """
 
         m = rot_z(q1)
@@ -130,11 +132,11 @@ class RoboticArm:
 
         return m.dot(np.array([0, 0, 0, 1]))
 
-    def reverse(self, v):
+    def inverse(self, v: np.ndarray) -> Tuple[float, float, float]:
         """
-        Reverse Kinematics
+        Inverse Kinematics
 
-        @param v: Desired position of arm's end
+        @param v: Desired position of arm's end | (x, y, z, 1)
         @return: Angles to be set on servos
         """
 
