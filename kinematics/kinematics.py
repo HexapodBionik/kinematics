@@ -82,9 +82,10 @@ class KinematicsSolver:
     The leg has 3 degrees of freedom.
     """
 
-    def __init__(self, t1: np.ndarray, t2: np.ndarray, t3: np.ndarray,
+    def __init__(self, mount_t: np.ndarray, t1: np.ndarray, t2: np.ndarray, t3: np.ndarray,
                  ma2: float, ma3: float):
         """
+        @param mount_t: Translation from world origin to J1
         @param t1: Translation 1 (between J1 and J2)
         @param t2: Translation 2 (between J2 and J3)
         @param t3: Translation 3 (between J3 and FCP)
@@ -92,9 +93,11 @@ class KinematicsSolver:
         @param ma3: Servo mount angle 3 (in radians)
         """
 
+        assert mount_t.ndim == 1
         assert t1.ndim == 1
         assert t2.ndim == 1
         assert t3.ndim == 1
+        assert len(mount_t) == 4
         assert len(t1) == 4
         assert len(t2) == 4
         assert len(t3) == 4
@@ -105,6 +108,7 @@ class KinematicsSolver:
         assert t3[1] == 0
         assert t3[3] == 1
 
+        self._mount_t = mount_t
         self.t1 = t1
         self.t2 = t2
         self.t3 = t3
@@ -121,7 +125,8 @@ class KinematicsSolver:
         @return: Position of leg's foot center point
         """
 
-        m = rot_z(q1)
+        m = trans(self._mount_t)
+        m = m.dot(rot_z(q1))
         m = m.dot(trans(self.t1))
         m = m.dot(rot_x(math.pi/2))
         m = m.dot(rot_z(q2+self.ma2))
@@ -158,7 +163,7 @@ class KinematicsSolver:
         v = rot_z(-q1).dot(v)
         x = v[0] - self.t1[0]
         y = v[1]
-        z = v[2] - self.t1[2]
+        z = v[2] - self._mount_t[2] - self.t1[2]
 
         q2 = self.ma2
         q2 += (math.pi/2)*np.sign(z) if x == 0 \

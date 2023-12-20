@@ -25,8 +25,8 @@ class SimpleJointSpaceTrajectory:
         @param velocity_end: end velocity of each joint in (rad/s)
         @param time_end: time of movement from start to end
         coordinates in seconds
-        @return: list of 3 tuples each containing coefficients for cubic polynomial
-        realizing trajectory for each joint
+        @return: list of 3 tuples each containing coefficients
+        for cubic polynomial realizing trajectory for each joint
         """
         start_position = np.array([*start_coordinates, 1])
         end_position = np.array([*end_coordinates, 1])
@@ -50,7 +50,8 @@ class SimpleJointSpaceTrajectory:
                                           start_velocity: float,
                                           end_velocity: float, end_time: float) -> np.ndarray:
         """
-        Solve system of equations and get the coefficients for a cubic polynomial
+        Solve system of equations and get the coefficients
+        for a cubic polynomial
         """
         A = np.array([[1, 0, 0, 0],
                       [1, end_time, pow(end_time, 2), pow(end_time, 3)],

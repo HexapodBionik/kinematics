@@ -6,6 +6,9 @@ import matplotlib
 matplotlib.use('Qt5Agg')
 
 # Wszystkie wartości translacji w metrach
+# Translacja mocowania - pomiędzy world frame, a J1
+mount_t = np.array([0, 0, 0.05, 1])
+
 # Translacja T1 - pomiędzy J1, a J2
 t1 = np.array([0.05, 0, -0.035, 1])
 
@@ -16,11 +19,11 @@ t2 = np.array([0.09, 0, 0, 1])
 t3 = np.array([0.1, 0, 0, 1])
 
 
-kinematics_solver = KinematicsSolver(t1, t2, t3, 0, -np.pi/2)
+kinematics_solver = KinematicsSolver(mount_t, t1, t2, t3, 0, -np.pi/2)
 trajectory = SimpleJointSpaceTrajectory(kinematics_solver)
 
-start_coordinates = np.array([0, -0.02, -0.15])
-end_coordinates = np.array([0, 0.02, -0.135])
+start_coordinates = np.array([0, -0.05, 0])
+end_coordinates = np.array([0, 0.05, 0])
 
 velocity_start = np.array([0, 0, 0])
 velocity_end = np.array([0, 0, 0])
@@ -53,7 +56,6 @@ theta1 = j_pos[0](x)
 theta2 = j_pos[1](x)
 theta3 = j_pos[2](x)
 for i in range(len(x)):
-    #print(theta1[i], theta2[i], theta3[i])
     coordinates = kinematics_solver.forward(theta1[i], theta2[i], theta3[i])
     x_points.append(coordinates[0])
     y_points.append(coordinates[1])
