@@ -1,5 +1,5 @@
 from kinematics.kinematics import KinematicsSolver
-from joint_trajectories import MidpointsJointSpaceTrajectory
+from joint_trajectories import ViaPointsJointSpaceTrajectory
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -20,9 +20,9 @@ t3 = np.array([0.1, 0, 0, 1])
 
 
 kinematics_solver = KinematicsSolver(mount_t, t1, t2, t3, 0, -np.pi/2)
-midpoints_trajectory = MidpointsJointSpaceTrajectory(kinematics_solver)
+via_points_trajectory = ViaPointsJointSpaceTrajectory(kinematics_solver)
 
-# 5 interpolation points (2 boundary points and 3 midpoints), each represented as subarray with values in x, y and z axis
+# 5 interpolation points (2 boundary points and 3 via points), each represented as subarray with values in x, y and z axis
 coordinates = np.array([[0, -0.05, 0], [0.05, -0.02, 0.05], [0.05, 0, 0.06], [0.05, 0.02, 0.05], [0, 0.05, 0]])
 
 # Boundary velocities (start and finish velocity) for each joint
@@ -35,7 +35,7 @@ move_times = np.array([1.5, 0.25, 0.25, 1.5])
 x = np.arange(0, sum(move_times), 0.005)
 
 
-polys = midpoints_trajectory.generate_trajectory(coordinates, velocities, move_times)
+polys = via_points_trajectory.generate_trajectory(coordinates, velocities, move_times)
 
 
 midtrajectory_positions = polys[0](x)
@@ -84,7 +84,7 @@ for i in range(len(x)):
 # Create a 3D scatter plot
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111, projection='3d')
-ax.set_title(label="Trajectory with 2 midpoints generated with spline polynomial")
+ax.set_title(label="Trajectory with 2 via points generated with spline polynomial")
 scatter = ax.scatter(x_points, y_points, z_points, marker='o', label="Spline polynomial")
 ax.view_init(elev=45, azim=135)
 coordinate_points_x = [x[0] for x in coordinates]

@@ -119,7 +119,7 @@ class SplinePolynomial:
         return np.array(values)
 
 
-class MidpointsJointSpaceTrajectory:
+class ViaPointsJointSpaceTrajectory:
     def __init__(self, kinematics_solver: KinematicsSolver):
         self._kinematics_solver = kinematics_solver
         self._poly_deg = 3
